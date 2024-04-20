@@ -15,6 +15,7 @@ public class Scanner {
      * @param result будет содержать результаты
      */
     public void scan(ScanningSubject subject, ScanningResult result) {
-
+        int fetcherIndex = 0;
+        boolean isScanningInterrupted = false;
     }
 }

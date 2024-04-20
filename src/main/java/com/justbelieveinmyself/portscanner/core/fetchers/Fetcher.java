@@ -49,6 +49,5 @@ public interface Fetcher extends Cloneable {
      */
     void cleanUp();
 
-
     // getName() ?
 }
