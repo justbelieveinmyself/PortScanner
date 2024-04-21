@@ -46,4 +46,44 @@ public class FetcherRegistry {
         }
     }
 
+    private void saveSelectedFetchers(Preferences preferences) {
+        StringBuilder sb = new StringBuilder();
+        for (String fetcherName : selectedFetchers.keySet()) {
+            sb.append(fetcherName).append("###");
+        }
+        String value = sb.toString();
+        if (value.endsWith("###")) value = value.substring(0, value.length() - 3);
+
+        preferences.put(PREFERENCE_SELECTED_FETCHERS, value);
+    }
+
+    /**
+     * Добавляет слушателя для наблюдений за событиями FetcherRegistry (изменение выбранных сборщиков)
+     */
+    public void addListener(FetcherRegistryUpdateListener listener) {
+        updateListeners.add(listener);
+    }
+
+    /**
+     * @return коллекцию выбранных сборщиков
+     */
+    public Collection<Fetcher> getRegisteredFetchers() {
+        return registeredFetchers.values();
+    }
+
+    /**
+     * Ищет по айди выбранный сборщик
+     * @return индекс, если сборщик найден, или -1
+     */
+    public int getSelectedFetcherIndex(String id) {
+        int index = 0;
+        for (Fetcher fetcher : selectedFetchers.values()) {
+            if (id.equals(fetcher.getFullName())) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
 }

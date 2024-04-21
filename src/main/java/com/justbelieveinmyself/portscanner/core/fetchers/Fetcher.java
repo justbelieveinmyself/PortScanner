@@ -49,5 +49,9 @@ public interface Fetcher extends Cloneable {
      */
     void cleanUp();
 
+    /**
+     * @return уникальный идентификатор
+     */
+    String getId();
     // getName() ?
 }

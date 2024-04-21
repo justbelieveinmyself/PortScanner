@@ -2,6 +2,7 @@ package com.justbelieveinmyself.portscanner.core;
 
 import com.justbelieveinmyself.portscanner.config.Config;
 import com.justbelieveinmyself.portscanner.config.ScannerConfig;
+import com.justbelieveinmyself.portscanner.core.ScanningResult.ResultType;
 import com.justbelieveinmyself.portscanner.util.InetAddressUtils;
 
 import java.net.InetAddress;
@@ -11,14 +12,19 @@ import java.util.*;
 
 import static com.justbelieveinmyself.portscanner.util.InetAddressUtils.matchingAddress;
 
+/**
+ * ScanningSubject представляет один отсканированный объект
+ * IP адрес и любые доп. параметры, которые могут использоваться
+ * для кэширования промежуточных данных между различными сборщиками
+ */
 public class ScanningSubject {
     ScannerConfig config;
     private InetAddress address;
     private NetworkInterface netIf;
     private InterfaceAddress ifAddr;
     private List<Integer> requestedPorts;
-    //    private Map<String, Object> params;
-//    private ResultType resultType = ResultType.UNKNOWN; ?
+    private Map<String, Object> params;
+    private ResultType resultType = ResultType.UNKNOWN;
     private boolean isAborted = false;
 //    int adaptedPortTimeout = -1;
 
@@ -65,6 +71,18 @@ public class ScanningSubject {
         requestedPorts.add(requestedPort);
     }
 
+    public boolean hasParameter(String name) {
+        return params.containsKey(name);
+    }
+
+    public Object getParameter(String name) {
+        return params.get(name);
+    }
+
+    public void setParameter(String name, Object value) {
+        params.put(name, value);
+    }
+
     public InetAddress getAddress() {
         return address;
     }
@@ -81,6 +99,9 @@ public class ScanningSubject {
         return ifAddr;
     }
 
+    public ResultType getResultType() {
+        return resultType;
+    }
     //getAdaptedPortTimeout?
 
     @Override
