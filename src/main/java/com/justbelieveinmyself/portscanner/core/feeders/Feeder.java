@@ -50,4 +50,5 @@ public interface Feeder {
         return new ScanningSubject(ip);
     }
 
+    String getId();
 }

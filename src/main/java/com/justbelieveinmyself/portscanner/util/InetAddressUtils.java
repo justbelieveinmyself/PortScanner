@@ -38,7 +38,8 @@ public class InetAddressUtils {
         }
         try {
             return InetAddress.getByAddress(addressBytes);
-        } catch (UnknownHostException e) { 	// this should never happen as we are modifying the same bytes received from the InetAddress
+        } catch (
+                UnknownHostException e) {    // this should never happen as we are modifying the same bytes received from the InetAddress
             throw new IllegalArgumentException(e);
         }
     }
@@ -57,7 +58,6 @@ public class InetAddressUtils {
         }
     }
 
-
     public static NetworkInterface getInterface(InetAddress address) {
         try {
             return getInterface(address, NetworkInterface.networkInterfaces());
@@ -69,6 +69,53 @@ public class InetAddressUtils {
     public static InterfaceAddress matchingAddress(NetworkInterface netIf, Class<? extends InetAddress> addressClass) {
         if (netIf == null) return null;
         return netIf.getInterfaceAddresses().stream().filter(i -> i.getAddress().getClass() == addressClass).findFirst().orElse(null);
+    }
+
+    public static boolean greaterThan(InetAddress inetAddress1, InetAddress inetAddress2) {
+        byte[] address1 = inetAddress1.getAddress();
+        byte[] address2 = inetAddress2.getAddress();
+        for (int i = 0; i < address1.length; i++) {
+            if ((address1[i] & 0xFF) > (address2[i] & 0xFF)) {
+                return true;
+            } else if ((address1[i] & 0xFF) < (address2[i] & 0xFF)) {
+                break;
+            }
+        }
+        return false;
+    }
+
+    public static InetAddress increment(InetAddress address) {
+        return modifyInetAddress(address, true);
+    }
+
+    public static InetAddress decrement(InetAddress address) {
+        return modifyInetAddress(address, true);
+    }
+
+    /**
+     * Увеличивает или уменьшает IP адрес на 1
+     * @return увеличенный/уменьшенный IP адрес
+     */
+    private static InetAddress modifyInetAddress(InetAddress address, boolean isIncrement) {
+        try {
+            byte[] newAddress = address.getAddress();
+            for (int i = newAddress.length - 1; i >= 0; i--) {
+                if (isIncrement) {
+                    if (++newAddress[i] != 0x00) {
+                        break;
+                    }
+                } else {
+                    if (--newAddress[i] != 0x00) {
+                        break;
+                    }
+                }
+            }
+            return InetAddress.getByAddress(newAddress);
+        } catch (UnknownHostException e) {
+            //никогда не случится
+            assert false : e;
+            return null;
+        }
     }
 
 }
