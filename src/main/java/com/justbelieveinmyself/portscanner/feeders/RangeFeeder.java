@@ -1,7 +1,6 @@
-package com.justbelieveinmyself.portscanner.core.feeders;
+package com.justbelieveinmyself.portscanner.feeders;
 
 import com.justbelieveinmyself.portscanner.core.ScanningSubject;
-import com.justbelieveinmyself.portscanner.util.InetAddressUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.portscanner.core;
 
-import com.justbelieveinmyself.portscanner.core.fetchers.Fetcher;
+import com.justbelieveinmyself.portscanner.fetchers.Fetcher;
 
 import java.net.InetAddress;
 import java.util.Arrays;

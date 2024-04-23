@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.portscanner.core;
 
-import com.justbelieveinmyself.portscanner.core.fetchers.Fetcher;
+import com.justbelieveinmyself.portscanner.fetchers.Fetcher;
 import com.justbelieveinmyself.portscanner.core.state.ScanningState;
 import com.justbelieveinmyself.portscanner.core.state.StateMachine;
 import com.justbelieveinmyself.portscanner.core.state.StateMachine.Transition;

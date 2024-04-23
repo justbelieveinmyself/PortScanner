@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.portscanner.core.fetchers;
+package com.justbelieveinmyself.portscanner.fetchers;
 
 import java.util.*;
 import java.util.prefs.Preferences;

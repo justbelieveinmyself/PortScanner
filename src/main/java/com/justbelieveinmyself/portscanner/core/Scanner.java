@@ -1,9 +1,9 @@
 package com.justbelieveinmyself.portscanner.core;
 
-import com.justbelieveinmyself.portscanner.core.feeders.Feeder;
-import com.justbelieveinmyself.portscanner.core.fetchers.Fetcher;
-import com.justbelieveinmyself.portscanner.core.fetchers.FetcherRegistry;
-import com.justbelieveinmyself.portscanner.core.fetchers.MACFetcher;
+import com.justbelieveinmyself.portscanner.feeders.Feeder;
+import com.justbelieveinmyself.portscanner.fetchers.Fetcher;
+import com.justbelieveinmyself.portscanner.fetchers.FetcherRegistry;
+import com.justbelieveinmyself.portscanner.fetchers.MACFetcher;
 import com.justbelieveinmyself.portscanner.core.values.NotAvailable;
 import com.justbelieveinmyself.portscanner.core.values.NotScanned;
 

@@ -26,7 +26,7 @@ public class ScanningSubject {
     private Map<String, Object> params;
     private ResultType resultType = ResultType.UNKNOWN;
     private boolean isAborted = false;
-//    int adaptedPortTimeout = -1;
+    int adaptedPortTimeout = -1;
 
     public ScanningSubject(InetAddress address) {
         this(address, InetAddressUtils.getInterface(address));
@@ -102,7 +102,14 @@ public class ScanningSubject {
     public ResultType getResultType() {
         return resultType;
     }
-    //getAdaptedPortTimeout?
+
+    public void setResultType(ResultType resultType) {
+        this.resultType = resultType;
+    }
+
+    public int getAdaptedPortTimeout() {
+        return adaptedPortTimeout;
+    }
 
     @Override
     public String toString() {

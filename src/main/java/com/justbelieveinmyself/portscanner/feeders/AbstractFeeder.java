@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.portscanner.core.feeders;
+package com.justbelieveinmyself.portscanner.feeders;
 
 import com.justbelieveinmyself.portscanner.core.ScanningSubject;
 

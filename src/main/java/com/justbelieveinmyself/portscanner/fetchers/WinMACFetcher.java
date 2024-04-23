@@ -1,7 +1,6 @@
-package com.justbelieveinmyself.portscanner.core.fetchers;
+package com.justbelieveinmyself.portscanner.fetchers;
 
 import com.justbelieveinmyself.portscanner.core.ScanningSubject;
-import com.justbelieveinmyself.portscanner.core.net.WinIpHlpDll;
 import com.justbelieveinmyself.portscanner.core.net.WinIpHlpDll.IpAddrByVal;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;

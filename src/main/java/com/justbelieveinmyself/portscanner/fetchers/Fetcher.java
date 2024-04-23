@@ -1,7 +1,7 @@
-package com.justbelieveinmyself.portscanner.core.fetchers;
+package com.justbelieveinmyself.portscanner.fetchers;
 
 import com.justbelieveinmyself.portscanner.core.ScanningSubject;
-import com.justbelieveinmyself.portscanner.core.feeders.Feeder;
+import com.justbelieveinmyself.portscanner.feeders.Feeder;
 import com.justbelieveinmyself.portscanner.core.values.NotAvailable;
 import com.justbelieveinmyself.portscanner.core.values.NotScanned;
 
