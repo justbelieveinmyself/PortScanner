@@ -32,6 +32,8 @@ public class PortsFetcher extends AbstractFetcher {
 
     private PortIterator portIterator;
 
+    boolean displayAsRange = true; //сделать изменяемой?
+
     public PortsFetcher(ScannerConfig config) {
         this.config = config;
     }
@@ -106,7 +108,7 @@ public class PortsFetcher extends AbstractFetcher {
         SortedSet<Integer> openPorts = getOpenPorts(subject);
         if (!openPorts.isEmpty()) {
             subject.setResultType(ScanningResult.ResultType.WITH_PORTS);
-            return new NumericRangeList(openPorts);
+            return new NumericRangeList(openPorts, displayAsRange);
         }
         return null;
     }

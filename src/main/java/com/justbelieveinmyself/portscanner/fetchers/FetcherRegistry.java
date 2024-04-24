@@ -31,7 +31,8 @@ public class FetcherRegistry {
         String fetcherPrefValue = preferences.get(PREFERENCE_SELECTED_FETCHERS, null);
         if (fetcherPrefValue == null) {
             selectedFetchers = new LinkedHashMap<>();
-            //TODO: добавить сборщиков по умолчанию
+            selectedFetchers.put(MACFetcher.ID, registeredFetchers.get(MACFetcher.ID));
+            selectedFetchers.put(PortsFetcher.ID, registeredFetchers.get(PortsFetcher.ID));
         } else {
             String[] fetcherPrefs = fetcherPrefValue.split("###");
             selectedFetchers = new LinkedHashMap<>(registeredFetchers.size());

@@ -8,6 +8,9 @@ import java.net.UnknownHostException;
 import static com.justbelieveinmyself.portscanner.util.InetAddressUtils.*;
 import static com.justbelieveinmyself.portscanner.util.OctetConvertor.octetsToInt;
 
+/**
+ * Фидер, который содержит диапазон адресов,
+ */
 public class RangeFeeder extends AbstractFeeder {
     private InetAddress startIP;
     private InetAddress endIP;
