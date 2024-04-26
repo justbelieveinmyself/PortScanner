@@ -1,6 +1,7 @@
 package com.justbelieveinmyself.portscanner.util;
 
 import java.net.*;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class InetAddressUtils {
@@ -64,6 +65,15 @@ public class InetAddressUtils {
         } catch (SocketException e) {
             return null;
         }
+    }
+
+    public static boolean isLikelyBroadcast(InetAddress address, InterfaceAddress ifAddr) {
+        byte[] bytes = address.getAddress();
+        int last = bytes.length - 1;
+        if (ifAddr != null) {
+            return address.equals(ifAddr.getBroadcast()) || bytes[last] == 0 && Arrays.equals(bytes, 0, last, ifAddr.getAddress().getAddress(), 0, last)
+        }
+        return bytes[last] == 0 || bytes[last] == (byte) 0xFF;
     }
 
     public static InterfaceAddress matchingAddress(NetworkInterface netIf, Class<? extends InetAddress> addressClass) {

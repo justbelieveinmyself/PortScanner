@@ -8,7 +8,7 @@ import java.util.prefs.Preferences;
 public class ScannerConfig {
     private Preferences preferences;
 
-//    public int maxThreads;
+    public int maxThreads;
     public int threadDelay;
     public boolean scanDeadHosts;
     public String selectedPinger;
@@ -26,7 +26,7 @@ public class ScannerConfig {
     public ScannerConfig(Preferences preferences) {
         this.preferences = preferences;
 
-//        maxThreads = preferences.getInt("maxThreads", )
+        maxThreads = preferences.getInt("maxThreads", 50);
         threadDelay = preferences.getInt("threadDelay", 20);
         boolean scanDeadHosts = preferences.getBoolean("scanDeadHosts", false);
         //selectedPinger? java>windows

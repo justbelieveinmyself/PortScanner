@@ -51,4 +51,6 @@ public interface Feeder {
     }
 
     String getId();
+
+    String getName();
 }

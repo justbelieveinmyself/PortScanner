@@ -11,14 +11,14 @@ import static java.util.Arrays.stream;
 public class Injector {
     private final Map<Class<?>, Object> instances = new LinkedHashMap<>();
     {
-        register(Injector.class, new Injector());
+        register(Injector.class, this);
     }
 
     public <T> void register(Class<T> type, T impl) {
         instances.put(type, impl);
     }
 
-    public <T> void register(Class<T>... types) {
+    public void register(Class<?>... types) {
         stream(types).forEach(this::require);
     }
 
@@ -55,7 +55,7 @@ public class Injector {
     private <T> T createInstance(Class<T> type) {
         Constructor<T> constructor = (Constructor<T>) stream(type.getConstructors())
                 .max(Comparator.comparing(Constructor::getParameterCount))
-                .orElseThrow(() -> new InjectorException("Нет публичного конструктора"));
+                .orElseThrow(() -> new InjectorException("Нет публичного конструктора " + type));
         try {
             return constructor.newInstance(resolveDeps(constructor));
         } catch (Throwable e) {

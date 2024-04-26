@@ -5,17 +5,14 @@ import java.util.prefs.Preferences;
 
 public class FetcherRegistry {
     static final String PREFERENCE_SELECTED_FETCHERS = "selectedFetchers";
-    private final Preferences preferences;
     private Map<String, Fetcher> registeredFetchers;
     private Map<String, Fetcher> selectedFetchers;
     private List<FetcherRegistryUpdateListener> updateListeners = new ArrayList<>();
 
-    public FetcherRegistry(List<Fetcher> fetchers, Preferences preferences) {
-        this.preferences = preferences;
+    public FetcherRegistry(List<Fetcher> fetchers) {
 
         registeredFetchers = createFetchersMap(fetchers);
 
-        loadSelectedFetchers(preferences);
     }
 
     private Map<String, Fetcher> createFetchersMap(List<Fetcher> fetchers) {
@@ -28,12 +25,13 @@ public class FetcherRegistry {
     }
 
     private void loadSelectedFetchers(Preferences preferences) {
-        String fetcherPrefValue = preferences.get(PREFERENCE_SELECTED_FETCHERS, null);
-        if (fetcherPrefValue == null) {
-            selectedFetchers = new LinkedHashMap<>();
-            selectedFetchers.put(MACFetcher.ID, registeredFetchers.get(MACFetcher.ID));
-            selectedFetchers.put(PortsFetcher.ID, registeredFetchers.get(PortsFetcher.ID));
-        } else {
+/*        String fetcherPrefValue = preferences.get(PREFERENCE_SELECTED_FETCHERS, null);
+        if (fetcherPrefValue == null) {*/
+        selectedFetchers = new LinkedHashMap<>();
+        selectedFetchers.put(MACFetcher.ID, registeredFetchers.get(MACFetcher.ID));
+        selectedFetchers.put(PortsFetcher.ID, registeredFetchers.get(PortsFetcher.ID));
+        selectedFetchers.put(FilteredPortsFetcher.ID, registeredFetchers.get(FilteredPortsFetcher.ID));
+/*        } else {
             String[] fetcherPrefs = fetcherPrefValue.split("###");
             selectedFetchers = new LinkedHashMap<>(registeredFetchers.size());
 
@@ -44,9 +42,10 @@ public class FetcherRegistry {
                     selectedFetchers.put(fetcherPref, fetcher);
                 }
             }
-        }
+        }*/
     }
 
+/*
     private void saveSelectedFetchers(Preferences preferences) {
         StringBuilder sb = new StringBuilder();
         for (String fetcherName : selectedFetchers.keySet()) {
@@ -57,6 +56,7 @@ public class FetcherRegistry {
 
         preferences.put(PREFERENCE_SELECTED_FETCHERS, value);
     }
+*/
 
     /**
      * Добавляет слушателя для наблюдений за событиями FetcherRegistry (изменение выбранных сборщиков)
@@ -66,14 +66,22 @@ public class FetcherRegistry {
     }
 
     /**
-     * @return коллекцию выбранных сборщиков
+     * @return коллекцию всех существующих сборщиков
      */
     public Collection<Fetcher> getRegisteredFetchers() {
         return registeredFetchers.values();
     }
 
     /**
+     * @return коллекцию выбранных сборщиков
+     */
+    public Collection<Fetcher> getSelectedFetchers() {
+        return registeredFetchers.values();
+    }
+
+    /**
      * Ищет по айди выбранный сборщик
+     *
      * @return индекс, если сборщик найден, или -1
      */
     public int getSelectedFetcherIndex(String id) {
