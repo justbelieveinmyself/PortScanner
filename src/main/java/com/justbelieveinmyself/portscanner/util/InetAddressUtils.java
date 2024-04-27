@@ -71,7 +71,7 @@ public class InetAddressUtils {
         byte[] bytes = address.getAddress();
         int last = bytes.length - 1;
         if (ifAddr != null) {
-            return address.equals(ifAddr.getBroadcast()) || bytes[last] == 0 && Arrays.equals(bytes, 0, last, ifAddr.getAddress().getAddress(), 0, last)
+            return address.equals(ifAddr.getBroadcast()) || bytes[last] == 0 && Arrays.equals(bytes, 0, last, ifAddr.getAddress().getAddress(), 0, last);
         }
         return bytes[last] == 0 || bytes[last] == (byte) 0xFF;
     }

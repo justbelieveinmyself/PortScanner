@@ -48,6 +48,11 @@ public class RangeFeeder extends AbstractFeeder {
         return "feeder.range";
     }
 
+    @Override
+    public String getName() {
+        return "Range Feeder";
+    }
+
     public void initPercentageIncrement() {
         byte[] endAddress = this.endIP.getAddress();
         long rawEndIP = octetsToInt(endAddress, endAddress.length - 4);

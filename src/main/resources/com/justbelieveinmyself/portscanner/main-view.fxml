@@ -14,6 +14,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import com.justbelieveinmyself.portscanner.ResultTable?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.justbelieveinmyself.portscanner.MainController">
    <children>
       <MenuBar layoutX="-8.0" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: white;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -51,7 +52,7 @@
                   <TextField fx:id="endIPInput" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="110.0" />
                </graphic>
             </Label>
-            <Button layoutX="352.0" layoutY="6.0" mnemonicParsing="false" onAction="#startScanning" text="Начать" textAlignment="CENTER" AnchorPane.topAnchor="6.0" />
+            <Button fx:id="startButton" layoutX="352.0" layoutY="6.0" mnemonicParsing="false" onAction="#startScanning" text="Начать" textAlignment="CENTER" AnchorPane.topAnchor="6.0" />
             <ImageView fitHeight="20.0" fitWidth="24.0" layoutX="416.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../../../Downloads/icons8-settings-50.png" />
@@ -60,12 +61,13 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Button layoutX="448.0" layoutY="6.0" mnemonicParsing="false" onAction="#test" text="Начать" textAlignment="CENTER" />
+             <Label fx:id="resultLabel" layoutX="-10.0" layoutY="6.0" nodeOrientation="RIGHT_TO_LEFT" text="Неважно" AnchorPane.topAnchor="6.0">
+             </Label>
          </children>
       </AnchorPane>
-      <TableView fx:id="ipTableView" layoutX="14.0" layoutY="62.0" prefHeight="309.0" prefWidth="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+      <ResultTable  fx:id="ipTableView" layoutX="14.0" layoutY="62.0" prefHeight="309.0" prefWidth="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
         <columns>
-<!--          <TableColumn prefWidth="120.0" text="IP">
+          <TableColumn prefWidth="120.0" text="IP">
               <cellValueFactory>
                   <PropertyValueFactory property="ip" />
               </cellValueFactory>
@@ -84,8 +86,8 @@
                 <cellValueFactory>
                     <PropertyValueFactory property="filteredPorts" />
                 </cellValueFactory>
-            </TableColumn>-->
+            </TableColumn>
         </columns>
-      </TableView>
+      </ResultTable>
    </children>
 </AnchorPane>
