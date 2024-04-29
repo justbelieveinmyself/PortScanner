@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.portscanner.core.values;
 
-import com.justbelieveinmyself.portscanner.config.Config;
+import com.justbelieveinmyself.portscanner.config.ScannerConfig;
 
 /**
  * Значение для отображения в списке результатов, означает что текущее значение неизвестно
@@ -13,7 +13,7 @@ public class NotAvailable extends Empty {
 
     @Override
     public String toString() {
-        return Config.getConfig().forScanner().notAvailableText;
+        return ScannerConfig.getConfig().notAvailableText;
     }
 
     @Override

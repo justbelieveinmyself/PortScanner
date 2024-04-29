@@ -34,8 +34,8 @@ public class PortsFetcher extends AbstractFetcher {
 
     boolean displayAsRange = true; //сделать изменяемой?
 
-    public PortsFetcher(ScannerConfig config) {
-        this.config = config;
+    public PortsFetcher() {
+        this.config = ScannerConfig.getConfig();
     }
 
     @Override

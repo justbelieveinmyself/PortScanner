@@ -102,7 +102,7 @@ public class ScanningResult {
             String fetcherName = fetchers.get(i).getFullName();
             details.append(fetcherName).append(":\t");
             Object value = iterator.next();
-            details.append(values != null ? value : "");
+            details.append(value != null ? value : "");
             details.append(newLine);
         }
         return details.toString();

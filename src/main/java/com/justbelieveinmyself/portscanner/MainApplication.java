@@ -10,7 +10,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 900, 700);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Scanner");
         stage.setScene(scene);
         stage.show();

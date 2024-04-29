@@ -9,4 +9,5 @@ module com.justbelieveinmyself.portscanner {
 
     opens com.justbelieveinmyself.portscanner to javafx.fxml;
     exports com.justbelieveinmyself.portscanner;
+    exports com.justbelieveinmyself.portscanner.core.net;
 }

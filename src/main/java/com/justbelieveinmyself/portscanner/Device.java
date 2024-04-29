@@ -15,9 +15,12 @@ public class Device {
         this.filteredPorts = new SimpleStringProperty(filteredPorts);
     }
 
-    // Геттеры для свойств
     public String getIp() {
         return ip.get();
+    }
+
+    public SimpleStringProperty ipProperty() {
+        return ip;
     }
 
     public void setIp(String ip) {
@@ -28,12 +31,20 @@ public class Device {
         return macAddress.get();
     }
 
+    public SimpleStringProperty macAddressProperty() {
+        return macAddress;
+    }
+
     public void setMacAddress(String macAddress) {
         this.macAddress.set(macAddress);
     }
 
     public String getPorts() {
         return ports.get();
+    }
+
+    public SimpleStringProperty portsProperty() {
+        return ports;
     }
 
     public void setPorts(String ports) {
@@ -44,7 +55,22 @@ public class Device {
         return filteredPorts.get();
     }
 
+    public SimpleStringProperty filteredPortsProperty() {
+        return filteredPorts;
+    }
+
     public void setFilteredPorts(String filteredPorts) {
         this.filteredPorts.set(filteredPorts);
     }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "ip=" + ip.get() +
+                ", macAddress=" + macAddress.get() +
+                ", ports=" + ports.get() +
+                ", filteredPorts=" + filteredPorts.get() +
+                '}';
+    }
+
 }

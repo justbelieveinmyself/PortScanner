@@ -1,13 +1,9 @@
 package com.justbelieveinmyself.portscanner.config;
 
-import java.util.prefs.Preferences;
-
 /**
  * Хранит конфигурацию сканера
  */
 public class ScannerConfig {
-    private Preferences preferences;
-
     public int maxThreads;
     public int threadDelay;
     public boolean scanDeadHosts;
@@ -16,46 +12,35 @@ public class ScannerConfig {
     public int pingCount;
     public boolean skipBroadcastAddresses;
     public int portTimeout;
-//    public boolean adaptPortTimeout;
+    //    public boolean adaptPortTimeout;
     public int minPortTimeout;
     public String portString;
     public boolean useRequestedPorts;
     public String notAvailableText;
     public String notScannedText;
 
-    public ScannerConfig(Preferences preferences) {
-        this.preferences = preferences;
-
-        maxThreads = preferences.getInt("maxThreads", 50);
-        threadDelay = preferences.getInt("threadDelay", 20);
-        boolean scanDeadHosts = preferences.getBoolean("scanDeadHosts", false);
-        //selectedPinger? java>windows
-        pingTimeout = preferences.getInt("pingTimeout", 2000);
-        pingCount = preferences.getInt("pingCount", 3);
-        skipBroadcastAddresses = preferences.getBoolean("skipBroadcastAddresses", true);
-        portTimeout = preferences.getInt("portTimeout", 2000);
+    ScannerConfig() {
+        maxThreads = 50;
+        threadDelay = 20;
+        boolean scanDeadHosts = false;
+        pingTimeout = 2000;
+        pingCount = 3;
+        skipBroadcastAddresses = true;
+        portTimeout = 2000;
 //        adaptPortTimeout ?
-        minPortTimeout = preferences.getInt("minPortTimeout", 100);
-        portString = preferences.get("portString", "80,443,8080");
-        useRequestedPorts = preferences.getBoolean("userRequestedPorts", true);
-        notAvailableText = "Not available";
-        notScannedText = "Not scanned";
+        minPortTimeout = 100;
+        portString = "440-450";
+        useRequestedPorts = true;
+        notAvailableText = "Значения не доступны (нет результатов)";
+        notScannedText = "Не сканировано";
     }
 
-    public void store() {
-//        preferences.putInt("maxThreads", maxThreads);
-        preferences.putInt("threadDelay", threadDelay);
-        preferences.putBoolean("scanDeadHosts", scanDeadHosts);
-//        preferences.put("selectedPinger", selectedPinger);
-        preferences.putInt("pingTimeout", pingTimeout);
-        preferences.putInt("pingCount", pingCount);
-        preferences.putBoolean("skipBroadcastAddresses", skipBroadcastAddresses);
-        preferences.putInt("portTimeout", portTimeout);
-//        preferences.putBoolean("adaptPortTimeout", adaptPortTimeout);
-        preferences.putInt("minPortTimeout", minPortTimeout);
-        preferences.put("portString", portString);
-        preferences.putBoolean("useRequestedPorts", useRequestedPorts);
-        preferences.put("notAvailableText", notAvailableText);
-        preferences.put("notScannedText", notScannedText);
+    private static class ConfigHolder {
+        static final ScannerConfig INSTANCE = new ScannerConfig();
     }
+
+    public static ScannerConfig getConfig() {
+        return ConfigHolder.INSTANCE;
+    }
+
 }

@@ -1,11 +1,11 @@
 package com.justbelieveinmyself.portscanner.core;
 
-import com.justbelieveinmyself.portscanner.feeders.Feeder;
-import com.justbelieveinmyself.portscanner.fetchers.Fetcher;
 import com.justbelieveinmyself.portscanner.core.state.ScanningState;
 import com.justbelieveinmyself.portscanner.core.state.StateMachine;
 import com.justbelieveinmyself.portscanner.core.state.StateMachine.Transition;
 import com.justbelieveinmyself.portscanner.core.state.StateTransitionListener;
+import com.justbelieveinmyself.portscanner.feeders.Feeder;
+import com.justbelieveinmyself.portscanner.fetchers.Fetcher;
 import com.justbelieveinmyself.portscanner.fetchers.FetcherRegistry;
 
 import java.net.InetAddress;
@@ -44,7 +44,7 @@ public class ScanningResultList implements Iterable<ScanningResult> {
     }
 
     public synchronized void initNewScan(Feeder feeder) {
-        selectedFetchers = new ArrayList<>(fetcherRegistry.getSelectedFetchers());
+        selectedFetchers = new ArrayList<>(fetcherRegistry.getRegisteredFetchers());
 
         this.feederInfo = feeder.getInfo();
         this.feederName = feeder.getName();
@@ -76,7 +76,7 @@ public class ScanningResultList implements Iterable<ScanningResult> {
         info.numScanned++;
         Integer index = resultIndexes.get(address);
         if (index == null) {
-            return new ScanningResult(address, fetcherRegistry.getSelectedFetchers().size());
+            return new ScanningResult(address, fetcherRegistry.getRegisteredFetchers().size());
         }
         return resultList.get(index);
     }

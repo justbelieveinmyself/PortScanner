@@ -1,8 +1,8 @@
 package com.justbelieveinmyself.portscanner.core;
 
-import com.justbelieveinmyself.portscanner.config.Config;
 import com.justbelieveinmyself.portscanner.config.ScannerConfig;
 import com.justbelieveinmyself.portscanner.core.ScanningResult.ResultType;
+import com.justbelieveinmyself.portscanner.core.net.PingResult;
 import com.justbelieveinmyself.portscanner.util.InetAddressUtils;
 
 import java.net.InetAddress;
@@ -41,7 +41,8 @@ public class ScanningSubject {
         this.address = address;
         this.netIf = netIf;
         this.ifAddr = ifAddr;
-        this.config = Config.getConfig().forScanner();
+        this.config = ScannerConfig.getConfig();
+        this.params = new HashMap<>();
     }
 
     public boolean isLocal() {
@@ -108,7 +109,20 @@ public class ScanningSubject {
     }
 
     public int getAdaptedPortTimeout() {
-        return adaptedPortTimeout;
+        // если уже рассчитан раннее
+        if (adaptedPortTimeout > 0) {
+            return adaptedPortTimeout;
+        }
+
+        // попытка настроить тайм-аут, если доступны результаты пингования
+        PingResult pingResult = (PingResult) getParameter("pinger");
+        if (pingResult != null) {
+            adaptedPortTimeout = Math.min(Math.max(pingResult.getLongestTime() * 3, config.minPortTimeout), config.portTimeout);
+            return adaptedPortTimeout;
+        }
+
+        // если нет результатов пингования возвращаем обычный тайм-аут
+        return config.portTimeout;
     }
 
     @Override

@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Logger;
 
 /**
  * Хранит текущее состояние и производит переходы с соответствующими методами
  */
 public class StateMachine {
+    private final Logger LOG = Logger.getLogger(StateMachine.class.getSimpleName());
 
     public enum Transition {INIT, START, STOP, NEXT, COMPLETE, RESET, RESCAN, CONTINUE}
 
@@ -46,6 +48,7 @@ public class StateMachine {
      */
     void transitionTo(ScanningState newState, Transition transition) {
         if (state != newState) {
+            LOG.info("Новое состояние: " + newState);
             state = newState;
             notifyAboutTransition(transition);
         }
@@ -82,7 +85,7 @@ public class StateMachine {
             // уведомить ещё раз
             notifyAboutTransition(Transition.STOP);
         } else {
-            throw new IllegalStateException("Attempt to stop from " + state);
+            throw new IllegalStateException("Попытка остановки из состояния " + state);
         }
     }
 
@@ -93,7 +96,7 @@ public class StateMachine {
         if (state == ScanningState.STOPPING || state == ScanningState.KILLING) {
             transitionTo(ScanningState.IDLE, Transition.COMPLETE);
         } else {
-            throw new IllegalStateException("Attempt to complete from " + state);
+            throw new IllegalStateException("Попытка завершения из состояния " + state);
         }
     }
 
@@ -104,7 +107,7 @@ public class StateMachine {
         if (state == ScanningState.IDLE) {
             transitionTo(ScanningState.IDLE, Transition.RESCAN);
         } else {
-            throw new IllegalStateException("Attempt to rescan from " + state);
+            throw new IllegalStateException("Попытка пересканирования из состояния: " + state);
         }
     }
 
@@ -124,7 +127,7 @@ public class StateMachine {
         if (state == ScanningState.IDLE) {
             transitionTo(ScanningState.STARTING, Transition.CONTINUE);
         } else {
-            throw new IllegalStateException("Attempt to continue scanning from " + state);
+            throw new IllegalStateException("Попытка продолжить сканирование из состояния " + state);
         }
     }
 

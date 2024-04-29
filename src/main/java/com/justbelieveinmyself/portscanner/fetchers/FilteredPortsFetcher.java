@@ -11,14 +11,15 @@ import java.util.SortedSet;
  * Использует результат сканирования PortsFetcher'a для отображения фильтрованных портов
  */
 public class FilteredPortsFetcher extends PortsFetcher {
+    public static final String ID = "fetcher.ports.filtered";
 
-    public FilteredPortsFetcher(ScannerConfig config) {
-        super(config);
+    public FilteredPortsFetcher() {
+        super();
     }
 
     @Override
     public String getId() {
-        return "fetcher.ports.filtered";
+        return ID;
     }
 
     @Override

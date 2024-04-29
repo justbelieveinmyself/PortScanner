@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 import static com.justbelieveinmyself.portscanner.core.state.ScanningState.KILLING;
 import static com.justbelieveinmyself.portscanner.core.state.ScanningState.SCANNING;
@@ -17,6 +18,7 @@ import static com.justbelieveinmyself.portscanner.util.InetAddressUtils.isLikely
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class ScannerDispatcherThread extends Thread implements ThreadFactory, StateTransitionListener {
+    private final Logger LOG = Logger.getLogger(ScannerDispatcherThread.class.getSimpleName());
     private static final long UI_UPDATE_INTERVAL_MS = 150;
 
     private ScannerConfig config;
@@ -29,12 +31,15 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
     ThreadGroup threadGroup;
     ExecutorService threadPool;
 
-    public ScannerDispatcherThread(Feeder feeder, Scanner scanner, StateMachine stateMachine, ScanningResultList scanningResults, ScannerConfig scannerConfig) {
+    private ScanningResultCallback resultsCallback;
+
+    public ScannerDispatcherThread(Feeder feeder, Scanner scanner, StateMachine stateMachine, ScanningResultList scanningResults, ScanningResultCallback resultsCallback) {
         setName(getClass().getSimpleName());
-        this.config = scannerConfig;
+        this.config = ScannerConfig.getConfig();
         this.stateMachine = stateMachine;
         this.threadGroup = new ThreadGroup(getName());
         this.threadPool = Executors.newFixedThreadPool(config.maxThreads, this);
+        this.resultsCallback = resultsCallback;
 
         // сделаем процессом, чтоб при закрытии программы пользователем JVM автоматически прерывала
         setDaemon(true);
@@ -59,6 +64,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
             try {
                 ScanningSubject subject = null;
+                LOG.info("Try to scan.. state: " + stateMachine.getState());
                 while (feeder.hasNext() && stateMachine.inState(SCANNING)) {
                     //небольшая задержка перед созданием потока
                     Thread.sleep(config.threadDelay);
@@ -71,6 +77,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
                         }
 
                         ScanningResult result = scanningResultList.createResult(subject.getAddress());
+                        resultsCallback.prepareForResults(result);
 
                         AddressScannerTask scanningTask = new AddressScannerTask(subject, result);
                         threadPool.execute(scanningTask);
@@ -91,7 +98,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
             try {
                 while (!threadPool.awaitTermination(UI_UPDATE_INTERVAL_MS, MILLISECONDS)) {
-                    //update progress?
+                    LOG.info("Active threads: " + numActiveThreads);
                 }
             } catch (InterruptedException e) {
                 //окончание цикла
@@ -140,7 +147,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
             try {
                 scanner.scan(subject, result);
-                //consume results?
+                resultsCallback.consumeResults(result);
             } finally {
                 numActiveThreads.decrementAndGet();
             }
