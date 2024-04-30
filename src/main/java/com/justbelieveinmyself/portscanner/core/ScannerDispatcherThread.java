@@ -64,7 +64,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
             try {
                 ScanningSubject subject = null;
-                LOG.info("Try to scan.. state: " + stateMachine.getState());
+                LOG.info("Попытка сканирования, текущее состояние: " + stateMachine.getState());
                 while (feeder.hasNext() && stateMachine.inState(SCANNING)) {
                     //небольшая задержка перед созданием потока
                     Thread.sleep(config.threadDelay);
@@ -98,7 +98,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
             try {
                 while (!threadPool.awaitTermination(UI_UPDATE_INTERVAL_MS, MILLISECONDS)) {
-                    LOG.info("Active threads: " + numActiveThreads);
+                    LOG.info("Активно потоков: " + numActiveThreads);
                 }
             } catch (InterruptedException e) {
                 //окончание цикла

@@ -117,7 +117,7 @@ public class ScanningSubject {
         // попытка настроить тайм-аут, если доступны результаты пингования
         PingResult pingResult = (PingResult) getParameter("pinger");
         if (pingResult != null) {
-            adaptedPortTimeout = Math.min(Math.max(pingResult.getLongestTime() * 3, config.minPortTimeout), config.portTimeout);
+            adaptedPortTimeout = Math.min(Math.max(pingResult.getLongestTime() * 3, 2000), config.portTimeout);
             return adaptedPortTimeout;
         }
 

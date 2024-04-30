@@ -1,0 +1,12 @@
+.tab-pane .tab:selected {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-font-weight: bold;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-font-weight: normal;
+}

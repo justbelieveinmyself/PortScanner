@@ -12,7 +12,7 @@ public class JavaPinger implements Pinger {
     private int timeout;
 
     public JavaPinger(ScannerConfig config) {
-        this.timeout = config.pingTimeout;
+        this.timeout = 2000;
     }
 
     @Override

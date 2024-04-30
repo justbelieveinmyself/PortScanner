@@ -1,20 +1,25 @@
 package com.justbelieveinmyself.portscanner;
 
 import com.justbelieveinmyself.portscanner.core.*;
-import com.justbelieveinmyself.portscanner.core.state.ScanningState;
 import com.justbelieveinmyself.portscanner.core.state.StateMachine;
-import com.justbelieveinmyself.portscanner.core.state.StateMachine.Transition;
-import com.justbelieveinmyself.portscanner.core.state.StateTransitionListener;
 import com.justbelieveinmyself.portscanner.di.Injector;
-import com.justbelieveinmyself.portscanner.feeders.Feeder;
-import com.justbelieveinmyself.portscanner.feeders.RangeFeeder;
-import javafx.application.Platform;
+import com.justbelieveinmyself.portscanner.feeders.FeederCreator;
+import com.justbelieveinmyself.portscanner.feeders.RangeFeederGUI;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class MainController {
@@ -23,14 +28,6 @@ public class MainController {
     @FXML
     private Button startButton;
 
-    private Injector injector = new Injector();
-
-    {
-        new ComponentRegistry().register(injector);
-    }
-
-    private StateMachine stateMachine;
-
     @FXML
     private TextField endIPInput;
 
@@ -38,111 +35,64 @@ public class MainController {
     private TextField startIPInput;
 
     @FXML
-    private ResultTable ipTableView;
+    private ResultTable resultTable;
 
     @FXML
     private Label resultLabel;
 
-    @FXML
-    void startScanning(ActionEvent event) {
-        LOG.info("Starting scan..");
-        RangeFeeder rangeFeeder = new RangeFeeder(startIPInput.getText(), endIPInput.getText());
+    private Injector injector = new Injector();
 
-        new StartStopScanning(injector.require(ScannerDispatcherThreadFactory.class),
-                ipTableView, stateMachine, startButton, rangeFeeder, resultLabel).scan();
+    {
+        injector.register(Button.class, startButton);
+        injector.register(ResultTable.class, resultTable);
+        injector.register(Label.class, resultLabel);
+        new ComponentRegistry().register(injector);
     }
 
+    private StateMachine stateMachine;
+    private StartStopScanning startStopScanning;
+    private FeederCreator feederCreator = injector.require(FeederCreator.class);
+
     @FXML
-    void test(ActionEvent event) {
-        LOG.info("Test");
+    void startStopScanning(ActionEvent event) {
+        LOG.info("Starting scan..");
+
+        startStopScanning.nextState();
     }
 
     @FXML
     void initialize() {
         stateMachine = injector.require(StateMachine.class);
-        ipTableView.initialize(injector.require(ScanningResultList.class), stateMachine);
+        resultTable.initialize(injector.require(ScanningResultList.class), stateMachine);
         startIPInput.setText("192.168.0.0");
         endIPInput.setText("192.168.0.255");
+        if (feederCreator instanceof RangeFeederGUI) {
+            RangeFeederGUI rangeFeederGUI = (RangeFeederGUI) feederCreator;
+            rangeFeederGUI.init(startIPInput, endIPInput);
+        }
 
+        this.startStopScanning = new StartStopScanning(injector.require(ScannerDispatcherThreadFactory.class), resultTable, stateMachine, startButton, feederCreator, resultLabel);
+        injector.register(StartStopScanning.class, startStopScanning);
     }
 
+    @FXML
+    private void openSettings(Event event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings-view.fxml"));
+            Parent root = loader.load();
+            Stage settingsStage = new Stage();
 
-    public static class StartStopScanning implements StateTransitionListener {
-        private Logger LOG = Logger.getLogger(StartStopScanning.class.getSimpleName());
-        private ScannerDispatcherThreadFactory scannerDispatcherThreadFactory;
-        private ScannerDispatcherThread scannerThread;
-        private ResultTable resultTable;
-        private StateMachine stateMachine;
-        private Button button;
-        private Label resultLabel;
-        private Feeder feeder;
-
-        StartStopScanning(ScannerDispatcherThreadFactory scannerDispatcherThreadFactory, ResultTable resultTable, StateMachine stateMachine, Button button, RangeFeeder rangeFeeder, Label resultLabel) {
-            this.scannerDispatcherThreadFactory = scannerDispatcherThreadFactory;
-            this.resultTable = resultTable;
-            this.stateMachine = stateMachine;
-            this.button = button;
-            this.feeder = rangeFeeder;
-            stateMachine.addTransitionListener(this);
-            button.setDisable(true);
-            this.resultLabel = resultLabel;
-        }
-
-        public void scan() {
-            stateMachine.transitionToNext();
-        }
-
-        @Override
-        public void transitionTo(ScanningState state, Transition transition) {
-            Platform.runLater(() -> {
-                switch (state) {
-                    case IDLE:
-                        resultLabel.setText("Готово!");
-                        button.setDisable(false);
-                        break;
-                    case STARTING:
-                    case RESTARTING:
-                        if (transition != Transition.CONTINUE)
-                            resultTable.getItems().clear();
-                        try {
-                            scannerThread = scannerDispatcherThreadFactory.createScannerThread(feeder, createResultsCallback(state));
-                            stateMachine.startScanning();
-                        } catch (RuntimeException e) {
-                            stateMachine.reset();
-                            throw e;
-                        }
-                        break;
-                    case SCANNING:
-                        scannerThread.start();
-                        resultLabel.setText("Создание потоков.."); //TODO: какой поток работает
-                        break;
-                    case STOPPING:
-                        resultLabel.setText("Ожидание потоков..");
-                        break;
-                    case KILLING:
-                        button.setDisable(true);
-                        resultLabel.setText("Завершение потоков..");
-                        break;
-                }
-
-                button.setText("Стоп");
-            });
-        }
-
-        private ScanningResultCallback createResultsCallback(ScanningState state) {
-            return new ScanningResultCallback() {
-                public void prepareForResults(ScanningResult result) {
-                    resultTable.addOrUpdateResultRow(result);
-                    LOG.info("Подготовка к получению результата: " + result.toString());
-                }
-
-                public void consumeResults(ScanningResult result) {
-                    resultTable.addOrUpdateResultRow(result);
-                    LOG.info("Получен результат: " + result.toString());
-                }
-            };
+            settingsStage.initModality(Modality.APPLICATION_MODAL);
+            settingsStage.setTitle("Настройки");
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
+            settingsStage.initStyle(StageStyle.UTILITY);
+            settingsStage.setScene(scene);
+            settingsStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
 }
-
+//TODO: пофиксить создание потоками больше строк, чем их обрабатывают

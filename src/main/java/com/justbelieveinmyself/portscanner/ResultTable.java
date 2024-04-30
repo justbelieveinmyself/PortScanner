@@ -59,7 +59,6 @@ public class ResultTable extends TableView implements StateTransitionListener {
     }
 
     public void addResult(ScanningResult result) {
-        List<?> values = result.getValues();
         String macAddress = result.getMac() == null? "Ожидание.." : result.getMac();
         String ports = "Ожидание..";
         String filteredPorts = "Ожидание..";
