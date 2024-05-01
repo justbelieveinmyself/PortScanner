@@ -230,7 +230,7 @@ public class ScanningResultList implements Iterable<ScanningResult> {
          * @return true, если сканирование прошло успешно (не прервано)
          */
         public boolean isCompletedNormally() {
-            return scanAborted && !scanAborted;
+            return scanFinished && !scanAborted;
         }
 
     }

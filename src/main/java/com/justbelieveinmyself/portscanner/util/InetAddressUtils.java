@@ -1,13 +1,53 @@
 package com.justbelieveinmyself.portscanner.util;
 
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import static java.util.Collections.list;
+
 public class InetAddressUtils {
+    private static final Logger LOG = Logger.getLogger(InetAddressUtils.class.getSimpleName());
 
     public static InterfaceAddress getLocalInterface() {
-        return null;
+        InterfaceAddress anyAddress = null;
+        try {
+
+            List<NetworkInterface> interfaces = getNetworkInterfaces()
+                    .stream()
+                    .filter(i -> i.getParent() == null && !i.isVirtual())
+                    .toList();
+
+            for (NetworkInterface networkInterface : interfaces) {
+
+                try {
+                    if (networkInterface.getHardwareAddress() == null) {
+                        continue;
+                    }
+                } catch (SocketException ignore) {}
+
+                for (InterfaceAddress ifAddr : networkInterface.getInterfaceAddresses()) {
+                    anyAddress = ifAddr;
+                    InetAddress address = ifAddr.getAddress();
+                    if (!address.isLoopbackAddress() && address instanceof Inet4Address) {
+                        return ifAddr;
+                    }
+                }
+
+            }
+        } catch (SocketException e) {
+            LOG.info("Невозможно определить сетевой интерфейс " + e);
+        }
+
+        return anyAddress;
+    }
+
+    private static List<NetworkInterface> getNetworkInterfaces() throws SocketException {
+        ArrayList<NetworkInterface> interfaces = list(NetworkInterface.getNetworkInterfaces());
+        return interfaces;
     }
 
     public static NetworkInterface getInterface(InterfaceAddress address) {
@@ -31,7 +71,7 @@ public class InetAddressUtils {
         }
     }
 
-    private static InetAddress startRangeByNetmask(InetAddress address, InetAddress netmask) {
+    public static InetAddress startRangeByNetmask(InetAddress address, InetAddress netmask) {
         byte[] addressBytes = address.getAddress();
         byte[] netmaskBytes = netmask.getAddress();
         for (int i = 0; i < addressBytes.length; i++) {
@@ -43,6 +83,31 @@ public class InetAddressUtils {
                 UnknownHostException e) {    // this should never happen as we are modifying the same bytes received from the InetAddress
             throw new IllegalArgumentException(e);
         }
+    }
+
+    public static InetAddress endRangeByNetmask(InetAddress address, InetAddress netmask) {
+        byte[] netmaskBytes = netmask.getAddress();
+        byte[] addressBytes = address.getAddress();
+        for (int i = 0; i < addressBytes.length; i++) {
+            addressBytes[i] = (byte) (i < netmaskBytes.length ? (addressBytes[i] | ~(netmaskBytes[i])) : 255);
+        }
+        try {
+            return InetAddress.getByAddress(addressBytes);
+        } catch (UnknownHostException e) {
+            //никогда не выйдет
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static InetAddress parseNetmask(String netmaskString) throws UnknownHostException {
+        if (netmaskString.startsWith("/")) {
+            int totalBits = Integer.parseInt(netmaskString.substring(1));
+            return parseNetmask(totalBits);
+        }
+
+        netmaskString = netmaskString.replaceAll("\\.\\.", ".255.");
+        netmaskString = netmaskString.replaceAll("\\.\\.", ".255.");
+        return InetAddress.getByName(netmaskString);
     }
 
     public static InetAddress parseNetmask(int prefixBits) {

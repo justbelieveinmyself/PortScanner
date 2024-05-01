@@ -98,7 +98,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
             try {
                 while (!threadPool.awaitTermination(UI_UPDATE_INTERVAL_MS, MILLISECONDS)) {
-                    LOG.info("Активно потоков: " + numActiveThreads);
+                    LOG.info("Активно потоков: " + numActiveThreads.intValue());
                 }
             } catch (InterruptedException e) {
                 //окончание цикла
@@ -120,16 +120,19 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
     @Override
     public Thread newThread(Runnable r) {
+
         return new Thread(threadGroup, r) {
             {
                 setDaemon(true);
             }
+
             @Override
             public void interrupt() {
                 scanner.interrupt(this);
                 super.interrupt();
             }
         };
+
     }
 
     class AddressScannerTask implements Runnable {
@@ -139,6 +142,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
         public AddressScannerTask(ScanningSubject subject, ScanningResult result) {
             this.subject = subject;
             this.result = result;
+            numActiveThreads.incrementAndGet();
         }
 
         @Override

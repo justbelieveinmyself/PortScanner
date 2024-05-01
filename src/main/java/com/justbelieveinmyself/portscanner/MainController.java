@@ -5,10 +5,12 @@ import com.justbelieveinmyself.portscanner.core.state.StateMachine;
 import com.justbelieveinmyself.portscanner.di.Injector;
 import com.justbelieveinmyself.portscanner.feeders.FeederCreator;
 import com.justbelieveinmyself.portscanner.feeders.RangeFeederGUI;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -40,13 +42,19 @@ public class MainController {
     @FXML
     private Label resultLabel;
 
-    private Injector injector = new Injector();
+    @FXML
+    private Label hostnameLabel;
 
+    private static Injector injector = new Injector();
     {
         injector.register(Button.class, startButton);
         injector.register(ResultTable.class, resultTable);
         injector.register(Label.class, resultLabel);
         new ComponentRegistry().register(injector);
+    }
+
+    public static Injector getInjector() {
+        return injector;
     }
 
     private StateMachine stateMachine;
@@ -64,11 +72,9 @@ public class MainController {
     void initialize() {
         stateMachine = injector.require(StateMachine.class);
         resultTable.initialize(injector.require(ScanningResultList.class), stateMachine);
-        startIPInput.setText("192.168.0.0");
-        endIPInput.setText("192.168.0.255");
         if (feederCreator instanceof RangeFeederGUI) {
             RangeFeederGUI rangeFeederGUI = (RangeFeederGUI) feederCreator;
-            rangeFeederGUI.init(startIPInput, endIPInput);
+            rangeFeederGUI.init(startIPInput, endIPInput, hostnameLabel);
         }
 
         this.startStopScanning = new StartStopScanning(injector.require(ScannerDispatcherThreadFactory.class), resultTable, stateMachine, startButton, feederCreator, resultLabel);
@@ -94,5 +100,26 @@ public class MainController {
         }
     }
 
+    @FXML
+    private void showStatistics(ActionEvent event) {
+        resultTable.showResultsWindow();
+    }
+
+    @FXML
+    private void showDetail(ActionEvent event) {
+        resultTable.checkSelection();
+
+    }
+
+    @FXML
+    private void rescan(ActionEvent event) {
+        resultTable.checkSelection();
+        stateMachine.rescan();
+    }
+
+    @FXML
+    private void closeWindow(ActionEvent event) {
+        Platform.exit();
+    }
+
 }
-//TODO: пофиксить создание потоками больше строк, чем их обрабатывают

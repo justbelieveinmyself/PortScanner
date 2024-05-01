@@ -68,8 +68,10 @@ public class StartStopScanning implements StateTransitionListener {
 
                 case STARTING:
 
-                    if (transition != StateMachine.Transition.CONTINUE)
-                        resultTable.getItems().clear();
+                    if (transition != StateMachine.Transition.CONTINUE) {
+                        resultTable.resetSelection();
+                    }
+
                     try {
                         scannerThread = scannerDispatcherThreadFactory.createScannerThread(feederCreator.createFeeder(), createResultsCallback(state));
                         stateMachine.startScanning();
@@ -82,7 +84,7 @@ public class StartStopScanning implements StateTransitionListener {
                 case RESTARTING:
 
                     try {
-                        scannerThread = scannerDispatcherThreadFactory.createScannerThread(feederCreator.createFeeder(), createResultsCallback(state));
+                        scannerThread = scannerDispatcherThreadFactory.createScannerThread(feederCreator.createRescanFeeder(resultTable.getSelectionModel().getSelectedItems()), createResultsCallback(state));
                         stateMachine.startScanning();
                     } catch (RuntimeException e) {
                         stateMachine.reset();

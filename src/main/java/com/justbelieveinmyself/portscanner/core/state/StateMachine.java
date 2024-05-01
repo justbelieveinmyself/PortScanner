@@ -105,7 +105,7 @@ public class StateMachine {
      */
     public void rescan() {
         if (state == ScanningState.IDLE) {
-            transitionTo(ScanningState.IDLE, Transition.RESCAN);
+            transitionTo(ScanningState.RESTARTING, Transition.RESCAN);
         } else {
             throw new IllegalStateException("Попытка пересканирования из состояния: " + state);
         }

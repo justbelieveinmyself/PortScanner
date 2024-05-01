@@ -53,7 +53,7 @@ public class SettingsController {
     }
 
     @FXML
-    private void savePreferences() {
+    private void savePreferences(ActionEvent event) {
         try {
             new PortIterator(portTextArea.getText());
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class SettingsController {
         scannerConfig.askConfirmation = askConfirmationCheckbox.isSelected();
         scannerConfig.showInfo = showInfoCheckbox.isSelected();
         scannerConfig.portString = portTextArea.getText();
-
+        closeWindow(event);
     }
 
     @FXML
