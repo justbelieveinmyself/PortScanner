@@ -2,16 +2,16 @@ package com.justbelieveinmyself.portscanner;
 
 import com.justbelieveinmyself.portscanner.core.ScanningResultList;
 import com.justbelieveinmyself.portscanner.core.ScanningResultList.ScanInfo;
+import com.justbelieveinmyself.portscanner.core.UserErrorException;
 import com.justbelieveinmyself.portscanner.di.Injector;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Enumeration;
+
 public class ResultsController {
 
     @FXML
@@ -35,8 +35,7 @@ public class ResultsController {
     @FXML
     private Label withPortsCountLabel;
 
-    private Injector injector = MainController.getInjector();
-    private ScanningResultList scanningResults = injector.require(ScanningResultList.class);
+    private ScanningResultList scanningResults = MainController.getInjector().require(ScanningResultList.class);
 
     @FXML
     private void initialize() {
@@ -57,14 +56,14 @@ public class ResultsController {
             aliveCountLabel.setText(String.valueOf(scanInfo.getAliveCount()));
             withPortsCountLabel.setText(String.valueOf(scanInfo.getWithPortsCount()));
         } else {
-            throw new RuntimeException("Нет результатов");
+            throw new UserErrorException("Нет результатов");
         }
     }
 
     private String timeToText(double scanTime) {
-        double seconds = scanTime/1000;
-        double minutes = seconds/60;
-        double hours = minutes/60;
+        double seconds = scanTime / 1000;
+        double minutes = seconds / 60;
+        double hours = minutes / 60;
         NumberFormat format = new DecimalFormat("#.##");
         if (hours >= 1) {
             return format.format(hours) + " ч";

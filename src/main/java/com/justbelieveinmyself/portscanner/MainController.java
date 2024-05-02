@@ -13,9 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,6 +21,8 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import static com.justbelieveinmyself.portscanner.MainApplication.showAlertMessage;
 
 public class MainController {
     private final Logger LOG = Logger.getLogger(MainController.class.getName());
@@ -45,7 +45,14 @@ public class MainController {
     @FXML
     private Label hostnameLabel;
 
+    @FXML
+    private ProgressBar progressBar;
+
+    @FXML
+    private Label threadsLabel;
+
     private static Injector injector = new Injector();
+
     {
         injector.register(Button.class, startButton);
         injector.register(ResultTable.class, resultTable);
@@ -63,8 +70,6 @@ public class MainController {
 
     @FXML
     void startStopScanning(ActionEvent event) {
-        LOG.info("Starting scan..");
-
         startStopScanning.nextState();
     }
 
@@ -77,7 +82,7 @@ public class MainController {
             rangeFeederGUI.init(startIPInput, endIPInput, hostnameLabel);
         }
 
-        this.startStopScanning = new StartStopScanning(injector.require(ScannerDispatcherThreadFactory.class), resultTable, stateMachine, startButton, feederCreator, resultLabel);
+        this.startStopScanning = new StartStopScanning(injector.require(ScannerDispatcherThreadFactory.class), resultTable, stateMachine, startButton, feederCreator, resultLabel, progressBar, threadsLabel);
         injector.register(StartStopScanning.class, startStopScanning);
     }
 
@@ -92,8 +97,8 @@ public class MainController {
             settingsStage.setTitle("Настройки");
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
-            settingsStage.initStyle(StageStyle.UTILITY);
             settingsStage.setScene(scene);
+            settingsStage.setResizable(false);
             settingsStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,14 +112,39 @@ public class MainController {
 
     @FXML
     private void showDetail(ActionEvent event) {
-        resultTable.checkSelection();
+        try {
+            resultTable.handleDetailsAction(event);
+        } catch (UserErrorException e) {
+            showAlertMessage(e.getMessage());
+        }
 
     }
 
     @FXML
     private void rescan(ActionEvent event) {
-        resultTable.checkSelection();
-        stateMachine.rescan();
+        try {
+            resultTable.handleRescanAction(event);
+        } catch (UserErrorException e) {
+            showAlertMessage(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void copy(ActionEvent event) {
+        try {
+            resultTable.handleCopyAction(event);
+        } catch (UserErrorException e) {
+            showAlertMessage(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void delete(ActionEvent event) {
+        try {
+            resultTable.handleDeleteAction(event);
+        } catch (UserErrorException e) {
+            showAlertMessage(e.getMessage());
+        }
     }
 
     @FXML

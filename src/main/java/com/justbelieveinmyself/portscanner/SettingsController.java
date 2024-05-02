@@ -14,6 +14,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
+import static com.justbelieveinmyself.portscanner.MainApplication.showAlertMessage;
+
 public class SettingsController {
 
     @FXML
@@ -45,6 +47,14 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
+        askConfirmationCheckbox.setSelected(scannerConfig.askConfirmation);
+        maxThreadInput.setText(String.valueOf(scannerConfig.maxThreads));
+        portTimeoutInput.setText(String.valueOf(scannerConfig.portTimeout));
+        showInfoCheckbox.setSelected(scannerConfig.showInfo);
+        skipBroadcastsCheckbox.setSelected(scannerConfig.skipBroadcastAddresses);
+        threadDelayInput.setText(String.valueOf(scannerConfig.threadDelay));
+        portTextArea.setText(scannerConfig.portString);
+
         portTextArea.setCache(false);
         portTextArea.setSnapToPixel(false); //TODO: portTextArea not blurred
         portTextArea.addEventFilter(KeyEvent.KEY_TYPED, (event) -> {
@@ -59,13 +69,20 @@ public class SettingsController {
         } catch (Exception e) {
             tabPane.getSelectionModel().clearAndSelect(1);
             portTextArea.requestFocus();
-            throw new FetcherException("unparseablePortString", e);
+            showAlertMessage("Проверьте ввод! Пример: 1,2,6,15-300,6000");
+            return;
         }
 
-        scannerConfig.maxThreads = parseIntValue(maxThreadInput);
-        scannerConfig.portTimeout = parseIntValue(portTimeoutInput);
+        try {
+            scannerConfig.maxThreads = parseIntValue(maxThreadInput);
+            scannerConfig.portTimeout = parseIntValue(portTimeoutInput);
+            scannerConfig.threadDelay = parseIntValue(threadDelayInput);
+        } catch (NumberFormatException e) {
+            showAlertMessage("Проверьте ввод! Введите целое число!");
+            return;
+        }
+
         scannerConfig.skipBroadcastAddresses = skipBroadcastsCheckbox.isSelected();
-        scannerConfig.threadDelay = parseIntValue(threadDelayInput);
         scannerConfig.askConfirmation = askConfirmationCheckbox.isSelected();
         scannerConfig.showInfo = showInfoCheckbox.isSelected();
         scannerConfig.portString = portTextArea.getText();
@@ -87,11 +104,9 @@ public class SettingsController {
             return;
         }
 
-        System.out.println("IS ISO CONTROL");
         String characterString = event.getText();
 
         char c = characterString.charAt(0);
-
 
         this.isCharValid = validateChar(c, portTextArea.getText(), portTextArea.getCaretPosition());
     }

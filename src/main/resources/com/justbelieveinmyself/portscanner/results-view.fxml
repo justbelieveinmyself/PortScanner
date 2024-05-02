@@ -14,11 +14,11 @@
          </font>
       </Label>
       <Label layoutX="23.0" layoutY="40.0" text="Общее время:" />
-      <Label fx:id="scanTimeTotalLabel" layoutX="111.0" layoutY="40.0" text="3.6 сек" />
+      <Label fx:id="scanTimeTotalLabel" layoutX="111.0" layoutY="40.0" text="0 сек" />
       <Label layoutX="23.0" layoutY="66.0" text="Среднее время на хост:" />
-      <Label fx:id="scanTimeAverageLabel" layoutX="160.0" layoutY="66.0" text="0.3 сек" />
+      <Label fx:id="scanTimeAverageLabel" layoutX="160.0" layoutY="66.0" text="0 сек" />
       <Label layoutX="23.0" layoutY="97.0" text="Диапозон IP:" />
-      <Label fx:id="feederInfoLabel" layoutX="101.0" layoutY="97.0" text="255.255.255.255 - 255.255.255.255" />
+      <Label fx:id="feederInfoLabel" layoutX="101.0" layoutY="97.0" text="0" />
       <Label layoutX="23.0" layoutY="128.0" text="Хостов просканировано:" />
       <Label fx:id="hostCountLabel" layoutX="174.0" layoutY="128.0" text="0" />
       <Label layoutX="23.0" layoutY="154.0" text="Активные:" />

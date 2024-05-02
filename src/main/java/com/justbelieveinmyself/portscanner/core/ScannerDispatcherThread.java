@@ -32,14 +32,16 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
     ExecutorService threadPool;
 
     private ScanningResultCallback resultsCallback;
+    private ScanningProgressCallback progressCallback;
 
-    public ScannerDispatcherThread(Feeder feeder, Scanner scanner, StateMachine stateMachine, ScanningResultList scanningResults, ScanningResultCallback resultsCallback) {
+    public ScannerDispatcherThread(Feeder feeder, Scanner scanner, StateMachine stateMachine, ScanningResultList scanningResults, ScanningResultCallback resultsCallback, ScanningProgressCallback progressCallback) {
         setName(getClass().getSimpleName());
         this.config = ScannerConfig.getConfig();
         this.stateMachine = stateMachine;
         this.threadGroup = new ThreadGroup(getName());
         this.threadPool = Executors.newFixedThreadPool(config.maxThreads, this);
         this.resultsCallback = resultsCallback;
+        this.progressCallback = progressCallback;
 
         // сделаем процессом, чтоб при закрытии программы пользователем JVM автоматически прерывала
         setDaemon(true);
@@ -86,6 +88,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
                     long now = System.currentTimeMillis();
                     if (now - lastNotifyTime >= UI_UPDATE_INTERVAL_MS && subject != null) {
                         lastNotifyTime = now;
+                        progressCallback.updateProgress(subject.getAddress(), numActiveThreads.intValue(), feeder.percentageComplete());
                     }
                 }
             } catch (InterruptedException e) {
@@ -98,7 +101,7 @@ public class ScannerDispatcherThread extends Thread implements ThreadFactory, St
 
             try {
                 while (!threadPool.awaitTermination(UI_UPDATE_INTERVAL_MS, MILLISECONDS)) {
-                    LOG.info("Активно потоков: " + numActiveThreads.intValue());
+                    progressCallback.updateProgress(null, numActiveThreads.intValue(), 100);
                 }
             } catch (InterruptedException e) {
                 //окончание цикла

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
@@ -23,6 +24,8 @@
                         <MenuItem mnemonicParsing="false" onAction="#showStatistics" text=" Статистика сканирования" />
                         <MenuItem mnemonicParsing="false" onAction="#showDetail" text="Показать детали" />
                         <MenuItem mnemonicParsing="false" onAction="#rescan" text="Пересканировать" />
+                  <MenuItem mnemonicParsing="false" onAction="#copy" text="Скопировать" />
+                  <MenuItem mnemonicParsing="false" onAction="#delete" text="Удалить" />
                         <MenuItem mnemonicParsing="false" onAction="#closeWindow" text="Выход" />
                     </items>
                 </Menu>
@@ -60,12 +63,13 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </ImageView>
-                <Label fx:id="resultLabel" layoutX="471.0" layoutY="9.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" AnchorPane.topAnchor="9.0">
+                <Label fx:id="resultLabel" layoutX="481.0" layoutY="9.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" AnchorPane.topAnchor="9.0">
                 </Label>
-            <Label fx:id="hostnameLabel" layoutX="646.0" layoutY="9.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" />
+            <Label fx:id="hostnameLabel" layoutX="646.0" layoutY="9.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="8.0" />
+            <Label fx:id="threadsLabel" contentDisplay="RIGHT" layoutX="558.0" layoutY="10.0" text="Потоков: 0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="9.0" />
             </children>
         </AnchorPane>
-        <ResultTable fx:id="resultTable" layoutX="14.0" layoutY="62.0" prefHeight="309.0" prefWidth="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-5.0" AnchorPane.topAnchor="65.0">
+        <ResultTable fx:id="resultTable" layoutY="62.0" prefHeight="309.0" prefWidth="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="62.0">
             <columns>
                 <TableColumn prefWidth="150.0" text="IP">
                     <cellValueFactory>
@@ -89,5 +93,6 @@
                 </TableColumn>
             </columns>
         </ResultTable>
+      <ProgressBar fx:id="progressBar" disable="true" layoutX="306.0" layoutY="485.0" maxHeight="12.0" minHeight="10.0" prefWidth="400.0" progress="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
     </children>
 </AnchorPane>

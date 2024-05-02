@@ -65,12 +65,10 @@ public class Device {
 
     @Override
     public String toString() {
-        return "Device{" +
-                "ip=" + ip.get() +
-                ", macAddress=" + macAddress.get() +
-                ", ports=" + ports.get() +
-                ", filteredPorts=" + filteredPorts.get() +
-                '}';
+        return "IP-адрес - " + ip.get() +
+                "\nMAC-адрес - " + macAddress.get() +
+                "\nОткрытые порты - " + ports.get() +
+                "\nФильтрованный порт - " + filteredPorts.get();
     }
 
 }

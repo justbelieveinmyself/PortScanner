@@ -14,8 +14,8 @@ public class ScannerDispatcherThreadFactory {
         this.stateMachine = stateMachine;
     }
 
-    public ScannerDispatcherThread createScannerThread(Feeder feeder, ScanningResultCallback resultsCallback) {
-        return new ScannerDispatcherThread(feeder, scanner, stateMachine, scanningResults, resultsCallback);
+    public ScannerDispatcherThread createScannerThread(Feeder feeder, ScanningResultCallback resultsCallback, ScanningProgressCallback progressCallback) {
+        return new ScannerDispatcherThread(feeder, scanner, stateMachine, scanningResults, resultsCallback, progressCallback);
     }
 
 }
