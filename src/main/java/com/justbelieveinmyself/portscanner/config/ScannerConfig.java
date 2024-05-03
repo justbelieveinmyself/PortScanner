@@ -57,4 +57,3 @@ public class ScannerConfig {
     }
 
 }
-//TODO tostring device, show detials in maincontroller

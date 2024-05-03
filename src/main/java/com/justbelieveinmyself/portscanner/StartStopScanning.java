@@ -123,7 +123,7 @@ public class StartStopScanning implements StateTransitionListener, ScanningProgr
                 case SCANNING:
 
                     scannerThread.start();
-                    resultLabel.setText("Создание потоков.."); //TODO: какой поток работает
+                    resultLabel.setText("Создание потоков..");
                     break;
 
                 case STOPPING:

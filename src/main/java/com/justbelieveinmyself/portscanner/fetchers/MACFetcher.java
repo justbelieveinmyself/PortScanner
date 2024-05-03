@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public abstract class MACFetcher extends AbstractFetcher {
     public static final String ID = "fetcher.mac";
     static final Pattern macAddressPattern = Pattern.compile("([a-fA-F0-9]{1,2}[-:]){5}[a-fA-F0-9]{1,2}");
-    String separator = ":"; //TODO: дать возможность поменять при желании
+    String separator = ":";
 
     @Override
     public String getId() {
