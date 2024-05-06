@@ -125,7 +125,6 @@ public class ResultTable extends TableView implements StateTransitionListener {
         if (transition == Transition.COMPLETE && ScannerConfig.getConfig().showInfo) {
             showResultsWindow();
         }
-        setCursor(state == ScanningState.IDLE ? Cursor.DEFAULT : Cursor.WAIT);
     }
 
     public void showResultsWindow() {

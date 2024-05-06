@@ -51,6 +51,12 @@ public class MainController {
     @FXML
     private Label threadsLabel;
 
+    private static boolean isSettingsEnabled = true;
+
+    public static void setIsSettingsEnabled(boolean isSettingsEnabled) {
+        MainController.isSettingsEnabled = isSettingsEnabled;
+    }
+
     private static Injector injector = new Injector();
 
     {
@@ -88,20 +94,24 @@ public class MainController {
 
     @FXML
     private void openSettings(Event event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings-view.fxml"));
-            Parent root = loader.load();
-            Stage settingsStage = new Stage();
+        if (isSettingsEnabled) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("settings-view.fxml"));
+                Parent root = loader.load();
+                Stage settingsStage = new Stage();
 
-            settingsStage.initModality(Modality.APPLICATION_MODAL);
-            settingsStage.setTitle("Настройки");
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
-            settingsStage.setScene(scene);
-            settingsStage.setResizable(false);
-            settingsStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+                settingsStage.initModality(Modality.APPLICATION_MODAL);
+                settingsStage.setTitle("Настройки");
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
+                settingsStage.setScene(scene);
+                settingsStage.setResizable(false);
+                settingsStage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showAlertMessage("Дождитесь окончания сканирования!");
         }
     }
 

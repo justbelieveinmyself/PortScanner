@@ -164,7 +164,7 @@ public class InetAddressUtils {
     }
 
     public static InetAddress decrement(InetAddress address) {
-        return modifyInetAddress(address, true);
+        return modifyInetAddress(address, false);
     }
 
     /**

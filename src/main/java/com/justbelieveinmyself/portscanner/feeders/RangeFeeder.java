@@ -2,6 +2,7 @@ package com.justbelieveinmyself.portscanner.feeders;
 
 import com.justbelieveinmyself.portscanner.core.ScanningSubject;
 
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -30,10 +31,10 @@ public class RangeFeeder extends AbstractFeeder {
             initInterfaces(this.startIP);
             this.isReverse = false;
         } catch (UnknownHostException e) {
-            throw new FeederException("malformedIP");
+            throw new FeederException("Указан неправильно сформированный IP-адрес, он должен выглядеть как A.B.C.D");
         }
-        if (this.startIP.getClass() != this.endIP.getClass()) {
-            throw new FeederException("differentProtocols");
+        if (this.startIP instanceof Inet6Address || this.endIP instanceof Inet6Address) {
+            throw new FeederException("Используйте только IPv4 адреса");
         }
         if (greaterThan(this.startIP, this.endIP)) {
             this.isReverse = true;

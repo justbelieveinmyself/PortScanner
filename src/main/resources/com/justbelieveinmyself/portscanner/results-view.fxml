@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="205.0" prefWidth="330.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.justbelieveinmyself.portscanner.ResultsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="190.0" prefWidth="330.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.justbelieveinmyself.portscanner.ResultsController">
    <children>
       <Label layoutX="51.0" layoutY="8.0" text="Результаты сканирования" AnchorPane.topAnchor="8.0">
          <font>
@@ -21,14 +21,12 @@
       <Label fx:id="feederInfoLabel" layoutX="101.0" layoutY="97.0" text="0" />
       <Label layoutX="23.0" layoutY="128.0" text="Хостов просканировано:" />
       <Label fx:id="hostCountLabel" layoutX="174.0" layoutY="128.0" text="0" />
-      <Label layoutX="23.0" layoutY="154.0" text="Активные:" />
-      <Label fx:id="aliveCountLabel" layoutX="88.0" layoutY="154.0" text="0" />
       <ImageView fx:id="resultImage" fitHeight="25.0" fitWidth="25.0" layoutX="254.0" layoutY="8.0">
          <image>
             <Image url="@../../../../../../../../Downloads/icons8-галочка-64.png" />
          </image>
       </ImageView>
-      <Label layoutX="23.0" layoutY="177.0" text="С открытыми портами:" />
-      <Label fx:id="withPortsCountLabel" layoutX="156.0" layoutY="177.0" text="0" />
+      <Label layoutX="24.0" layoutY="155.0" text="С открытыми портами:" />
+      <Label fx:id="withPortsCountLabel" layoutX="161.0" layoutY="155.0" text="0" />
    </children>
 </AnchorPane>

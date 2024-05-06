@@ -3,7 +3,6 @@ package com.justbelieveinmyself.portscanner;
 import com.justbelieveinmyself.portscanner.core.ScanningResultList;
 import com.justbelieveinmyself.portscanner.core.ScanningResultList.ScanInfo;
 import com.justbelieveinmyself.portscanner.core.UserErrorException;
-import com.justbelieveinmyself.portscanner.di.Injector;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -13,9 +12,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class ResultsController {
-
-    @FXML
-    private Label aliveCountLabel;
 
     @FXML
     private Label feederInfoLabel;
@@ -53,7 +49,6 @@ public class ResultsController {
             scanTimeAverageLabel.setText(timeToText((double) scanInfo.getScanTime() / scanInfo.getHostCount()));
 
             hostCountLabel.setText(String.valueOf(scanInfo.getHostCount()));
-            aliveCountLabel.setText(String.valueOf(scanInfo.getAliveCount()));
             withPortsCountLabel.setText(String.valueOf(scanInfo.getWithPortsCount()));
         } else {
             throw new UserErrorException("Нет результатов");

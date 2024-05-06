@@ -6,6 +6,7 @@ import com.justbelieveinmyself.portscanner.core.state.ScanningState;
 import com.justbelieveinmyself.portscanner.core.state.StateMachine;
 import com.justbelieveinmyself.portscanner.core.state.StateTransitionListener;
 import com.justbelieveinmyself.portscanner.feeders.FeederCreator;
+import com.justbelieveinmyself.portscanner.feeders.FeederException;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -14,6 +15,7 @@ import javafx.stage.StageStyle;
 import java.net.InetAddress;
 import java.util.logging.Logger;
 
+import static com.justbelieveinmyself.portscanner.MainApplication.showAlertMessage;
 import static com.justbelieveinmyself.portscanner.core.state.ScanningState.*;
 import static com.justbelieveinmyself.portscanner.core.state.StateMachine.Transition.INIT;
 
@@ -89,6 +91,7 @@ public class StartStopScanning implements StateTransitionListener, ScanningProgr
             switch (state) {
                 case IDLE:
 
+                    MainController.setIsSettingsEnabled(true);
                     updateProgress(null, 0, 0);
                     resultLabel.setText("Готово!");
                     button.setDisable(false);
@@ -96,6 +99,7 @@ public class StartStopScanning implements StateTransitionListener, ScanningProgr
 
                 case STARTING:
 
+                    MainController.setIsSettingsEnabled(false);
                     if (transition != StateMachine.Transition.CONTINUE) {
                         resultTable.resetSelection();
                     }
@@ -103,8 +107,9 @@ public class StartStopScanning implements StateTransitionListener, ScanningProgr
                     try {
                         scannerThread = scannerDispatcherThreadFactory.createScannerThread(feederCreator.createFeeder(), createResultsCallback(state), StartStopScanning.this);
                         stateMachine.startScanning();
-                    } catch (RuntimeException e) {
+                    } catch (FeederException e) {
                         stateMachine.reset();
+                        showAlertMessage(e.getMessage());
                         throw e;
                     }
                     break;
@@ -164,6 +169,7 @@ public class StartStopScanning implements StateTransitionListener, ScanningProgr
                 stage.setTitle("Scanner");
             }
             threadsLabel.setText("Потоков: " + runningThreads);
+
             progressBar.setProgress((double) percentageComplete / 100);
 
 
