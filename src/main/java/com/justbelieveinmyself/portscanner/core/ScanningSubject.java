@@ -2,7 +2,6 @@ package com.justbelieveinmyself.portscanner.core;
 
 import com.justbelieveinmyself.portscanner.config.ScannerConfig;
 import com.justbelieveinmyself.portscanner.core.ScanningResult.ResultType;
-import com.justbelieveinmyself.portscanner.core.net.PingResult;
 import com.justbelieveinmyself.portscanner.util.InetAddressUtils;
 
 import java.net.InetAddress;
@@ -114,14 +113,7 @@ public class ScanningSubject {
             return adaptedPortTimeout;
         }
 
-        // попытка настроить тайм-аут, если доступны результаты пингования
-        PingResult pingResult = (PingResult) getParameter("pinger");
-        if (pingResult != null) {
-            adaptedPortTimeout = Math.min(Math.max(pingResult.getLongestTime() * 3, 2000), config.portTimeout);
-            return adaptedPortTimeout;
-        }
-
-        // если нет результатов пингования возвращаем обычный тайм-аут
+        // если нет возвращаем обычный тайм-аут
         return config.portTimeout;
     }
 

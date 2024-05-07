@@ -12,16 +12,6 @@ import java.net.UnknownHostException;
 public abstract class AbstractFeederGUI implements FeederCreator {
     protected Feeder feeder;
 
-    @Override
-    public String getFeederId() {
-        return feeder.getId();
-    }
-
-    @Override
-    public String getFeederName() {
-        return feeder.getName();
-    }
-
     private static final Object localResolveLock = new Object();
     private static String localName;
     private static InterfaceAddress localInterface;

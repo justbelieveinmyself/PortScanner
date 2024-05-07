@@ -10,8 +10,4 @@ public interface FeederCreator {
 
     Feeder createRescanFeeder(List<Device> selectedItems);
 
-    String getFeederId();
-
-    String getFeederName();
-
 }
