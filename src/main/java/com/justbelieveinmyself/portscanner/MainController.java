@@ -1,8 +1,12 @@
 package com.justbelieveinmyself.portscanner;
 
 import com.justbelieveinmyself.portscanner.core.*;
+import com.justbelieveinmyself.portscanner.core.state.ScanningState;
 import com.justbelieveinmyself.portscanner.core.state.StateMachine;
 import com.justbelieveinmyself.portscanner.di.Injector;
+import com.justbelieveinmyself.portscanner.exporters.ExportProcessor;
+import com.justbelieveinmyself.portscanner.exporters.Exporter;
+import com.justbelieveinmyself.portscanner.exporters.ExporterRegistry;
 import com.justbelieveinmyself.portscanner.feeders.FeederCreator;
 import com.justbelieveinmyself.portscanner.feeders.RangeFeederGUI;
 import javafx.application.Platform;
@@ -15,14 +19,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import static com.justbelieveinmyself.portscanner.MainApplication.showAlertMessage;
+import static com.justbelieveinmyself.portscanner.core.state.ScanningState.IDLE;
 
 public class MainController {
     private final Logger LOG = Logger.getLogger(MainController.class.getName());
@@ -72,6 +79,7 @@ public class MainController {
 
     private StateMachine stateMachine;
     private StartStopScanning startStopScanning;
+    private ExporterRegistry exporterRegistry = injector.require(ExporterRegistry.class);
     private FeederCreator feederCreator = injector.require(FeederCreator.class);
 
     @FXML
@@ -160,6 +168,29 @@ public class MainController {
     @FXML
     private void closeWindow(ActionEvent event) {
         Platform.exit();
+    }
+
+    @FXML
+    private void exportResults(ActionEvent event) {
+        ScanningResultList scanningResults = resultTable.getScanningResults();
+
+        if (!stateMachine.inState(IDLE) ||!scanningResults.areResultsAvailable()) {
+            showAlertMessage("Дождитесь окончания сканирования!");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV file (*.csv)", "*.csv"));
+
+        File file = fileChooser.showSaveDialog(((MenuItem) event.getSource()).getParentPopup().getOwnerWindow());
+        if (file == null) {
+            return;
+        }
+
+        Exporter exporter = exporterRegistry.createExporter(file.getName());
+
+        ExportProcessor exportProcessor = new ExportProcessor(exporter, file);
+        exportProcessor.process(scanningResults);
     }
 
     @FXML

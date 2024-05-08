@@ -180,9 +180,9 @@ public class ResultTable extends TableView implements StateTransitionListener {
 
     public void updateResult(int index, ScanningResult result) {
         List<?> values = result.getValues();
-        String macAddress = values.get(0).toString();
-        String ports = values.get(1).toString();
-        String filteredPorts = values.get(2).toString();
+        String macAddress = values.get(1).toString();
+        String ports = values.get(2).toString();
+        String filteredPorts = values.get(3).toString();
 
         Device device = items.get(index);
         device.setIp(result.getAddress().getHostAddress());

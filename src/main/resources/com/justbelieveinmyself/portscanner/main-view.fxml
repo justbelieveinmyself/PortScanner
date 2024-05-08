@@ -32,6 +32,7 @@
                 <Menu mnemonicParsing="false" text="Настройки">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openSettings" text="Предпочтения" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportResults" text="Экспортирование" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Помощь">

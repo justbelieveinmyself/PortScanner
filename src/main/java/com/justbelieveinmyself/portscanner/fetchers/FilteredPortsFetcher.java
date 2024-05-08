@@ -11,7 +11,7 @@ import java.util.SortedSet;
  * Использует результат сканирования PortsFetcher'a для отображения фильтрованных портов
  */
 public class FilteredPortsFetcher extends PortsFetcher {
-    public static final String ID = "fetcher.ports.filtered";
+    public static final String ID = "Filtered Ports";
 
     public FilteredPortsFetcher() {
         super();

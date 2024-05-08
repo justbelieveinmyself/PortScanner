@@ -99,7 +99,7 @@ public class ScanningResult {
         Iterator<?> iterator = getValues().iterator();
         List<Fetcher> fetchers = resultList.getFetchers();
         for (int i = 0; iterator.hasNext(); i++) {
-            String fetcherName = fetchers.get(i).getFullName();
+            String fetcherName = fetchers.get(i).getName();
             details.append(fetcherName).append(":\t");
             Object value = iterator.next();
             details.append(value != null ? value : "");

@@ -41,7 +41,7 @@ public interface WinIpHlpDll extends Library {
         }
     }
 
-    Pointer IcmpCreateFile();
+/*    Pointer IcmpCreateFile(); TODO: ping
 
     boolean IcmpCloseHandle(Pointer hIcmp);
 
@@ -54,7 +54,7 @@ public interface WinIpHlpDll extends Library {
             Pointer replyBuffer,
             int replySize,
             int timeout
-    );
+    );*/
 
     int SendARP(
             IpAddrByVal destIP,
@@ -81,6 +81,7 @@ public interface WinIpHlpDll extends Library {
 
     class IpOptionInformationByRef extends IpOptionInformation implements Structure.ByReference {}
 
+/*
     class IcmpEchoReply extends AutoOrderedStructure {
         public IpAddrByVal address;
         public int status;
@@ -98,5 +99,6 @@ public interface WinIpHlpDll extends Library {
         }
 
     }
+*/
 
 }

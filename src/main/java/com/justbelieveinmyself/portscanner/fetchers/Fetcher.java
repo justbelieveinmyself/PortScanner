@@ -20,12 +20,7 @@ public interface Fetcher extends Cloneable {
     /**
      * @return полное имя
      */
-    String getFullName();
-
-    /**
-     * @return информацию о сборщике
-     */
-    String getInfo();
+    String getName();
 
     /**
      * Проводит сборку
@@ -53,5 +48,5 @@ public interface Fetcher extends Cloneable {
      * @return уникальный идентификатор
      */
     String getId();
-    // getName() ?
+
 }

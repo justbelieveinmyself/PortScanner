@@ -22,7 +22,7 @@ import java.util.TreeSet;
  * Сканирует TCP порты
  */
 public class PortsFetcher extends AbstractFetcher {
-    public static final String ID = "fetcher.ports";
+    public static final String ID = "Ports";
 
     static final String PARAMETER_OPEN_PORTS = "openPorts";
     static final String PARAMETER_FILTERED_PORTS = "filteredPorts";
@@ -44,9 +44,8 @@ public class PortsFetcher extends AbstractFetcher {
     }
 
     @Override
-    public String getFullName() {
-        int numPorts = new PortIterator(config.portString).size();
-        return getId() + " [" + numPorts + (config.useRequestedPorts ? "+" : "") + "]";
+    public String getName() {
+        return getId();
     }
 
     @SuppressWarnings("unchecked")

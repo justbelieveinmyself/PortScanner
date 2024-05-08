@@ -1,23 +1,20 @@
 package com.justbelieveinmyself.portscanner.fetchers;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class FetcherRegistry {
     private Map<String, Fetcher> registeredFetchers;
 
-    public FetcherRegistry() {
-        registeredFetchers = Collections.unmodifiableMap(loadSelectedFetchers());
+    public FetcherRegistry(List<Fetcher> fetchers) {
+        registeredFetchers = createFetchersMap(fetchers);
     }
 
-    private Map<String, Fetcher> loadSelectedFetchers() {
-        Map<String, Fetcher> selectedFetchers = new LinkedHashMap<>();
-        selectedFetchers.put(MACFetcher.ID, new WinMACFetcher());
-        selectedFetchers.put(PortsFetcher.ID, new PortsFetcher());
-        selectedFetchers.put(FilteredPortsFetcher.ID, new FilteredPortsFetcher());
-        return selectedFetchers;
+    private Map<String, Fetcher> createFetchersMap(List<Fetcher> fetchers) {
+        Map<String, Fetcher> fetcherMap = new LinkedHashMap<>(fetchers.size());
+        for (Fetcher fetcher : fetchers) {
+            fetcherMap.put(fetcher.getId(), fetcher);
+        }
+        return Collections.unmodifiableMap(fetcherMap);
     }
 
     /**

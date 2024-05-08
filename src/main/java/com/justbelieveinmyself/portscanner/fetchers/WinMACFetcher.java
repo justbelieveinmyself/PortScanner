@@ -34,4 +34,9 @@ public class WinMACFetcher extends MACFetcher{
         return addr;
     }
 
+    @Override
+    public String getName() {
+        return getId();
+    }
+
 }

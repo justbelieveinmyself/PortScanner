@@ -5,7 +5,7 @@ import com.justbelieveinmyself.portscanner.core.ScanningSubject;
 import java.util.regex.Pattern;
 
 public abstract class MACFetcher extends AbstractFetcher {
-    public static final String ID = "fetcher.mac";
+    public static final String ID = "MAC Address";
     static final Pattern macAddressPattern = Pattern.compile("([a-fA-F0-9]{1,2}[-:]){5}[a-fA-F0-9]{1,2}");
     String separator = ":";
 
@@ -27,9 +27,11 @@ public abstract class MACFetcher extends AbstractFetcher {
     static String bytesToMAC(byte[] bytes) {
         StringBuilder mac = new StringBuilder();
         for (byte b : bytes) {
-            mac.append(String.format("%02x", b)).append(":");
+            mac.append(String.format("%02X", b)).append(":");
         }
-        if (mac.length() > 0) mac.deleteCharAt(mac.length() - 1);
+        if (mac.length() > 0) {
+            mac.deleteCharAt(mac.length() - 1);
+        }
         return mac.toString();
     }
 
