@@ -10,6 +10,8 @@ import com.justbelieveinmyself.portscanner.core.state.StateMachine.Transition;
 import com.justbelieveinmyself.portscanner.core.state.StateTransitionListener;
 import com.justbelieveinmyself.portscanner.core.values.NumericRangeList;
 import com.justbelieveinmyself.portscanner.fetchers.FilteredPortsFetcher;
+import com.justbelieveinmyself.portscanner.fetchers.MACFetcher;
+import com.justbelieveinmyself.portscanner.fetchers.PortsFetcher;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,6 +44,10 @@ public class ResultTable extends TableView implements StateTransitionListener {
     private StateMachine stateMachine;
     ContextMenu contextMenu;
 
+    private int macIndex;
+    private int portsIndex;
+    private int filteredPortsIndex;
+
     public ResultTable() {
         super();
 
@@ -53,6 +59,10 @@ public class ResultTable extends TableView implements StateTransitionListener {
         MenuItem rescanItem = new MenuItem("Пересканировать");
         MenuItem copyItem = new MenuItem("Скопировать");
         MenuItem deleteItem = new MenuItem("Удалить");
+        detailsItem.setOnAction(this::handleDetailsAction);
+        rescanItem.setOnAction(this::handleRescanAction);
+        copyItem.setOnAction(this::handleCopyAction);
+        deleteItem.setOnAction(this::handleDeleteAction);
         contextMenu.getItems().setAll(detailsItem, rescanItem, copyItem, deleteItem);
 
         setItems(items);
@@ -73,10 +83,6 @@ public class ResultTable extends TableView implements StateTransitionListener {
         this.scanningResults = scanningResults;
         this.stateMachine = stateMachine;
         stateMachine.addTransitionListener(this);
-        contextMenu.getItems().get(0).setOnAction(this::handleDetailsAction);
-        contextMenu.getItems().get(1).setOnAction(this::handleRescanAction);
-        contextMenu.getItems().get(2).setOnAction(this::handleCopyAction);
-        contextMenu.getItems().get(3).setOnAction(this::handleDeleteAction);
     }
 
     public void handleRescanAction(Event event) {
@@ -179,13 +185,16 @@ public class ResultTable extends TableView implements StateTransitionListener {
     }
 
     public void updateResult(int index, ScanningResult result) {
+        macIndex = scanningResults.getFetcherIndex(MACFetcher.ID);
+        portsIndex = scanningResults.getFetcherIndex(PortsFetcher.ID);
+        filteredPortsIndex = scanningResults.getFetcherIndex(FilteredPortsFetcher.ID);
+        
         List<?> values = result.getValues();
-        String macAddress = values.get(1).toString();
-        String ports = values.get(2).toString();
-        String filteredPorts = values.get(3).toString();
+        String macAddress = values.get(macIndex).toString();
+        String ports = values.get(portsIndex).toString();
+        String filteredPorts = values.get(filteredPortsIndex).toString();
 
         Device device = items.get(index);
-        device.setIp(result.getAddress().getHostAddress());
         device.setMacAddress(macAddress);
         device.setPorts(ports);
         device.setFilteredPorts(filteredPorts);

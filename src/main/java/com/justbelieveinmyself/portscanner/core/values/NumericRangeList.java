@@ -44,6 +44,7 @@ public class NumericRangeList implements Comparable<NumericRangeList> {
             } else {
                 if (isRange) {
                     sb.append(rangeStartNumber + 1 == prevNumber ? ',' : '-').append(prevNumber);
+                    isRange = false;
                 }
                 sb.append(',').append(curNumber);
             }

@@ -33,6 +33,10 @@ public class ScanningResult {
     /** Ссылка на содержащий список */
     ScanningResultList resultList;
 
+    public ScanningResultList getScanningResultList() {
+        return resultList;
+    }
+
     /**
      * Создает новый объект и инициализирует первое значение этим адресом
      * @param numberOfFetchers количество доступных сборщиков
@@ -40,16 +44,6 @@ public class ScanningResult {
     public ScanningResult(InetAddress address, int numberOfFetchers) {
         this.address = address;
         values = new Object[numberOfFetchers];
-        values[0] = address.getHostAddress();
-        type = ResultType.UNKNOWN;
-    }
-
-    /**
-     * Сбрасывает сканированные данные: возвращает объект к только что созданному состоянию
-     * Используется для повторного сканирования
-     */
-    public void reset() {
-        values = new Object[values.length];
         values[0] = address.getHostAddress();
         type = ResultType.UNKNOWN;
     }

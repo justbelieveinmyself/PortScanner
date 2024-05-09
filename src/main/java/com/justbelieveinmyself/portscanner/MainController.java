@@ -175,12 +175,13 @@ public class MainController {
         ScanningResultList scanningResults = resultTable.getScanningResults();
 
         if (!stateMachine.inState(IDLE) ||!scanningResults.areResultsAvailable()) {
-            showAlertMessage("Дождитесь окончания сканирования!");
+            showAlertMessage("Для экспортирования нужны результаты!");
             return;
         }
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV file (*.csv)", "*.csv"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT file (*.txt)", "*.txt"));
 
         File file = fileChooser.showSaveDialog(((MenuItem) event.getSource()).getParentPopup().getOwnerWindow());
         if (file == null) {
